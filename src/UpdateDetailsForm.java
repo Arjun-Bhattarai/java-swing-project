@@ -8,51 +8,77 @@ import java.sql.ResultSet;
 
 public class UpdateDetailsForm extends JFrame {
 
+    private JTextField usernameField;
     private JTextField emailField;
     private JPasswordField passwordField;
+    private JPasswordField newPasswordField;
 
-    public UpdateDetailsForm(String username) {
-        setTitle("Update Details");
-        setSize(400, 300);
+    public UpdateDetailsForm(String currentUsername) {
+
+        setTitle("Update Your Details");
+        setSize(400, 350);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        JPanel panel = new JPanel(new GridLayout(4, 2, 10, 10));
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(6, 2, 10, 10));
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
 
+        // Title
+        JLabel title = new JLabel("Update Your Details");
+        title.setFont(new Font("Arial", Font.BOLD, 16));
+        title.setHorizontalAlignment(JLabel.CENTER);
+        panel.add(title);
+        panel.add(new JLabel(""));
+
+        // Username
+        panel.add(new JLabel("Username:"));
+        usernameField = new JTextField();
+        panel.add(usernameField);
+
+        // Email
         panel.add(new JLabel("Email:"));
         emailField = new JTextField();
         panel.add(emailField);
 
-        panel.add(new JLabel("Enter Password to Confirm:"));
+        // Current Password (for verification)
+        panel.add(new JLabel("Current Password:"));
         passwordField = new JPasswordField();
         panel.add(passwordField);
 
+        // New Password
+        panel.add(new JLabel("New Password:"));
+        newPasswordField = new JPasswordField();
+        panel.add(newPasswordField);
+
+        // Button
         JButton updateBtn = new JButton("Update");
         panel.add(updateBtn);
+        panel.add(new JLabel("")); // empty space
 
         add(panel);
         setVisible(true);
 
-        loadCurrentEmail(username);
+        // Load current details from DB
+        loadCurrentDetails(currentUsername);
 
+        // Button action
         updateBtn.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
-                updateDetails(username);
+                updateDetails(currentUsername);
             }
         });
     }
 
-    private void loadCurrentEmail(String username) {
+    private void loadCurrentDetails(String username) {
         try {
             Connection con = DBConnection.getConnection();
-            String sql = "SELECT email FROM users WHERE username=?";
+            String sql = "SELECT username, email FROM users WHERE username=?";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, username);
-
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
+                usernameField.setText(rs.getString("username"));
                 emailField.setText(rs.getString("email"));
             }
         } catch (Exception e) {
@@ -60,27 +86,32 @@ public class UpdateDetailsForm extends JFrame {
         }
     }
 
-    private void updateDetails(String username) {
+    private void updateDetails(String oldUsername) {
+
+        String newUsername = usernameField.getText();
         String email = emailField.getText();
-        String password = new String(passwordField.getPassword());
+        String currentPassword = new String(passwordField.getPassword());
+        String newPassword = new String(newPasswordField.getPassword());
 
         try {
             Connection con = DBConnection.getConnection();
 
-            // verify password
+            // Verify current password
             String verifySql = "SELECT * FROM users WHERE username=? AND password=?";
             PreparedStatement verifyPs = con.prepareStatement(verifySql);
-            verifyPs.setString(1, username);
-            verifyPs.setString(2, password);
+            verifyPs.setString(1, oldUsername);
+            verifyPs.setString(2, currentPassword);
 
             ResultSet rs = verifyPs.executeQuery();
 
             if (rs.next()) {
-                // update email
-                String updateSql = "UPDATE users SET email=? WHERE username=?";
+                // Update all fields
+                String updateSql = "UPDATE users SET username=?, email=?, password=? WHERE username=?";
                 PreparedStatement updatePs = con.prepareStatement(updateSql);
-                updatePs.setString(1, email);
-                updatePs.setString(2, username);
+                updatePs.setString(1, newUsername);
+                updatePs.setString(2, email);
+                updatePs.setString(3, newPassword.isEmpty() ? currentPassword : newPassword); // keep old password if new empty
+                updatePs.setString(4, oldUsername);
 
                 int result = updatePs.executeUpdate();
                 if (result > 0) {
@@ -88,7 +119,7 @@ public class UpdateDetailsForm extends JFrame {
                     dispose();
                 }
             } else {
-                JOptionPane.showMessageDialog(this, "Password is incorrect!");
+                JOptionPane.showMessageDialog(this, "Current password is incorrect!");
             }
 
         } catch (Exception e) {

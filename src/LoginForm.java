@@ -12,40 +12,57 @@ public class LoginForm extends JFrame {
     private JPasswordField passwordField;
 
     public LoginForm() {
+
         setTitle("Login");
-        setSize(400, 250);
+        setSize(400, 260);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        JPanel panel = new JPanel(new GridLayout(3, 2, 10, 10));
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        // Main Panel
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(4, 2, 10, 10));
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
 
-        panel.add(new JLabel("Username:"));
+        // Title
+        JLabel title = new JLabel("User Login");
+        title.setFont(new Font("Arial", Font.BOLD, 16));
+        title.setHorizontalAlignment(JLabel.CENTER);
+
+        panel.add(title);
+        panel.add(new JLabel(""));   // empty space
+
+        // Username
+        JLabel userLabel = new JLabel("Username:");
         usernameField = new JTextField();
+
+        panel.add(userLabel);
         panel.add(usernameField);
 
-        panel.add(new JLabel("Password:"));
+        // Password
+        JLabel passLabel = new JLabel("Password:");
         passwordField = new JPasswordField();
+
+        panel.add(passLabel);
         panel.add(passwordField);
 
+        // Buttons
         JButton loginBtn = new JButton("Login");
-        panel.add(loginBtn);
-
         JButton signupBtn = new JButton("Signup");
+
+        panel.add(loginBtn);
         panel.add(signupBtn);
 
         add(panel);
         setVisible(true);
 
+        // Actions (same logic as yours)
         loginBtn.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
                 loginUser();
             }
         });
 
         signupBtn.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
                 new SignupForm();
@@ -54,11 +71,13 @@ public class LoginForm extends JFrame {
     }
 
     private void loginUser() {
+
         String username = usernameField.getText();
         String password = new String(passwordField.getPassword());
 
         try {
             Connection con = DBConnection.getConnection();
+
             String sql = "SELECT * FROM users WHERE username=? AND password=?";
             PreparedStatement ps = con.prepareStatement(sql);
 
@@ -74,6 +93,7 @@ public class LoginForm extends JFrame {
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid credentials!");
             }
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }

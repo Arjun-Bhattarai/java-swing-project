@@ -12,44 +12,58 @@ public class SignupForm extends JFrame {
     private JPasswordField passwordField;
 
     public SignupForm() {
+
         setTitle("Signup");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        JPanel panel = new JPanel(new GridLayout(4, 2, 10, 10));
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        // Main Panel
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(5, 2, 10, 10));
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
 
+        // Title
+        JLabel title = new JLabel("Create Account");
+        title.setFont(new Font("Arial", Font.BOLD, 16));
+        title.setHorizontalAlignment(JLabel.CENTER);
+
+        panel.add(title);
+        panel.add(new JLabel(""));
+
+        // Username
         panel.add(new JLabel("Username:"));
         usernameField = new JTextField();
         panel.add(usernameField);
 
+        // Email
         panel.add(new JLabel("Email:"));
         emailField = new JTextField();
         panel.add(emailField);
 
+        // Password
         panel.add(new JLabel("Password:"));
         passwordField = new JPasswordField();
         panel.add(passwordField);
 
+        // Buttons
         JButton signupBtn = new JButton("Signup");
-        panel.add(signupBtn);
-
         JButton loginBtn = new JButton("Go to Login");
+
+        panel.add(signupBtn);
         panel.add(loginBtn);
 
         add(panel);
         setVisible(true);
 
+        // Actions
         signupBtn.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
                 signupUser();
             }
         });
 
         loginBtn.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
                 new LoginForm();
@@ -58,12 +72,14 @@ public class SignupForm extends JFrame {
     }
 
     private void signupUser() {
+
         String username = usernameField.getText();
         String email = emailField.getText();
         String password = new String(passwordField.getPassword());
 
         try {
             Connection con = DBConnection.getConnection();
+
             String sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
             PreparedStatement ps = con.prepareStatement(sql);
 
@@ -78,6 +94,7 @@ public class SignupForm extends JFrame {
                 dispose();
                 new LoginForm();
             }
+
         } catch (Exception ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Signup failed!");

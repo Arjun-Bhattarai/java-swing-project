@@ -7,34 +7,51 @@ import java.sql.ResultSet;
 public class ViewDetailsForm extends JFrame {
 
     public ViewDetailsForm(String username) {
+
         setTitle("View Details");
-        setSize(400, 250);
+        setSize(400, 260);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        JPanel panel = new JPanel(new GridLayout(3, 1, 10, 10));
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        // Main Panel
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(4, 1, 10, 10));
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
+
+        // Title
+        JLabel title = new JLabel("User Details");
+        title.setFont(new Font("Arial", Font.BOLD, 16));
+        title.setHorizontalAlignment(JLabel.CENTER);
 
         JLabel userLabel = new JLabel();
         JLabel emailLabel = new JLabel();
 
+        userLabel.setHorizontalAlignment(JLabel.CENTER);
+        emailLabel.setHorizontalAlignment(JLabel.CENTER);
+
+        // Add components
+        panel.add(title);
         panel.add(userLabel);
         panel.add(emailLabel);
 
         add(panel);
         setVisible(true);
 
+        // Load data
         try {
             Connection con = DBConnection.getConnection();
+
             String sql = "SELECT username, email FROM users WHERE username=?";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, username);
 
             ResultSet rs = ps.executeQuery();
+
             if (rs.next()) {
                 userLabel.setText("Username: " + rs.getString("username"));
                 emailLabel.setText("Email: " + rs.getString("email"));
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
