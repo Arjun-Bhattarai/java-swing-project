@@ -13,12 +13,10 @@ public class ViewDetailsForm extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Main Panel
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(4, 1, 10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
 
-        // Title
         JLabel title = new JLabel("User Details");
         title.setFont(new Font("Arial", Font.BOLD, 16));
         title.setHorizontalAlignment(JLabel.CENTER);
@@ -29,7 +27,6 @@ public class ViewDetailsForm extends JFrame {
         userLabel.setHorizontalAlignment(JLabel.CENTER);
         emailLabel.setHorizontalAlignment(JLabel.CENTER);
 
-        // Add components
         panel.add(title);
         panel.add(userLabel);
         panel.add(emailLabel);
@@ -37,7 +34,6 @@ public class ViewDetailsForm extends JFrame {
         add(panel);
         setVisible(true);
 
-        // Load data
         try {
             Connection con = DBConnection.getConnection();
 

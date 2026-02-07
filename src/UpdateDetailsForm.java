@@ -24,45 +24,38 @@ public class UpdateDetailsForm extends JFrame {
         panel.setLayout(new GridLayout(6, 2, 10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
 
-        // Title
         JLabel title = new JLabel("Update Your Details");
         title.setFont(new Font("Arial", Font.BOLD, 16));
         title.setHorizontalAlignment(JLabel.CENTER);
         panel.add(title);
         panel.add(new JLabel(""));
 
-        // Username
         panel.add(new JLabel("Username:"));
         usernameField = new JTextField();
         panel.add(usernameField);
 
-        // Email
+
         panel.add(new JLabel("Email:"));
         emailField = new JTextField();
         panel.add(emailField);
 
-        // Current Password (for verification)
         panel.add(new JLabel("Current Password:"));
         passwordField = new JPasswordField();
         panel.add(passwordField);
 
-        // New Password
         panel.add(new JLabel("New Password:"));
         newPasswordField = new JPasswordField();
         panel.add(newPasswordField);
 
-        // Button
         JButton updateBtn = new JButton("Update");
         panel.add(updateBtn);
-        panel.add(new JLabel("")); // empty space
+        panel.add(new JLabel(""));
 
         add(panel);
         setVisible(true);
 
-        // Load current details from DB
         loadCurrentDetails(currentUsername);
 
-        // Button action
         updateBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 updateDetails(currentUsername);
@@ -96,7 +89,6 @@ public class UpdateDetailsForm extends JFrame {
         try {
             Connection con = DBConnection.getConnection();
 
-            // Verify current password
             String verifySql = "SELECT * FROM users WHERE username=? AND password=?";
             PreparedStatement verifyPs = con.prepareStatement(verifySql);
             verifyPs.setString(1, oldUsername);
@@ -105,12 +97,11 @@ public class UpdateDetailsForm extends JFrame {
             ResultSet rs = verifyPs.executeQuery();
 
             if (rs.next()) {
-                // Update all fields
                 String updateSql = "UPDATE users SET username=?, email=?, password=? WHERE username=?";
                 PreparedStatement updatePs = con.prepareStatement(updateSql);
                 updatePs.setString(1, newUsername);
                 updatePs.setString(2, email);
-                updatePs.setString(3, newPassword.isEmpty() ? currentPassword : newPassword); // keep old password if new empty
+                updatePs.setString(3, newPassword.isEmpty() ? currentPassword : newPassword);
                 updatePs.setString(4, oldUsername);
 
                 int result = updatePs.executeUpdate();

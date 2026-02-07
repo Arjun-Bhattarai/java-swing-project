@@ -18,12 +18,10 @@ public class SignupForm extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Main Panel
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(5, 2, 10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
 
-        // Title
         JLabel title = new JLabel("Create Account");
         title.setFont(new Font("Arial", Font.BOLD, 16));
         title.setHorizontalAlignment(JLabel.CENTER);
@@ -31,22 +29,18 @@ public class SignupForm extends JFrame {
         panel.add(title);
         panel.add(new JLabel(""));
 
-        // Username
         panel.add(new JLabel("Username:"));
         usernameField = new JTextField();
         panel.add(usernameField);
 
-        // Email
         panel.add(new JLabel("Email:"));
         emailField = new JTextField();
         panel.add(emailField);
 
-        // Password
         panel.add(new JLabel("Password:"));
         passwordField = new JPasswordField();
         panel.add(passwordField);
 
-        // Buttons
         JButton signupBtn = new JButton("Signup");
         JButton loginBtn = new JButton("Go to Login");
 
@@ -56,7 +50,6 @@ public class SignupForm extends JFrame {
         add(panel);
         setVisible(true);
 
-        // Actions
         signupBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 signupUser();

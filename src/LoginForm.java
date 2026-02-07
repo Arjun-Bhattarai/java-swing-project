@@ -18,34 +18,29 @@ public class LoginForm extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Main Panel
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(4, 2, 10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
 
-        // Title
+
         JLabel title = new JLabel("User Login");
         title.setFont(new Font("Arial", Font.BOLD, 16));
         title.setHorizontalAlignment(JLabel.CENTER);
 
         panel.add(title);
-        panel.add(new JLabel(""));   // empty space
+        panel.add(new JLabel(""));
 
-        // Username
         JLabel userLabel = new JLabel("Username:");
         usernameField = new JTextField();
 
         panel.add(userLabel);
         panel.add(usernameField);
 
-        // Password
         JLabel passLabel = new JLabel("Password:");
         passwordField = new JPasswordField();
 
         panel.add(passLabel);
         panel.add(passwordField);
-
-        // Buttons
         JButton loginBtn = new JButton("Login");
         JButton signupBtn = new JButton("Signup");
 
@@ -55,7 +50,6 @@ public class LoginForm extends JFrame {
         add(panel);
         setVisible(true);
 
-        // Actions (same logic as yours)
         loginBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 loginUser();
